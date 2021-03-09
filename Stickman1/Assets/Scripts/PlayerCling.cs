@@ -11,61 +11,11 @@ public class PlayerCling : MonoBehaviour
     public Rigidbody2D CathObjects;
     public Image img;
     public HingeJoint2D HingeJoint;
-    public float hover_time;
-    public float recovery_time;
-    //private float stamina = 1;
     public bool catched = false;
-    private bool _iscatch;
     private void Start()
     {
         //_fixedjoint = gameObject.GetComponent<FixedJoint2D>();
         _playerManager = FindObjectOfType<PlayerManager>();
-    }
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (_iscatch)
-            {
-                if (img.fillAmount >= 0.001)
-                    _iscatch = true;
-                else
-                    _iscatch = false;
-            }
-            else
-            {
-                if (img.fillAmount >= 0.2)
-                    _iscatch = true;
-                else                      
-                    _iscatch = false;
-            }
-        }
-        else
-        {
-            _iscatch = false;
-        }
-        if (catched)
-        {
-              img.fillAmount -= Time.deltaTime / hover_time;
-        }
-        else
-        {
-            img.fillAmount += Time.deltaTime / recovery_time;
-        }
-        //im.fillAmount = stamina;
-        
-    }
-
-    private void FixedUpdate()
-    {
-            if (_iscatch)
-            {
-                Catch();
-            }
-            else
-            {
-                UnCatch();
-            }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

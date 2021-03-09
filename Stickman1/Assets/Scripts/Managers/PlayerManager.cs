@@ -62,6 +62,11 @@ public class PlayerManager : MonoBehaviour
     [Header("Debug")]
     public string CurrentState;
 
+    [Header ("Cling parameters")]
+    private bool _iscatch = false;
+    public float stamina = 1;
+    public float hover_time;
+    public float recovery_time;
 
     // managers
     private GameManager _gamemanager;
@@ -71,7 +76,6 @@ public class PlayerManager : MonoBehaviour
     // others
     private Rigidbody2D Head; // обьект для определения малой скорости, чтобы фиксировать конец игры
     private bool LowVelocityActive = true; // помогает нормально работать таймеру конца игры
-    //private bool _iscatch = false;
 
     public enum BodyPartsName
     {
@@ -103,15 +107,28 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKey(KeyCode.Space))
-        //{
-        //    Catch();
-        //}
-        //else
-        //{
-        //    UnCatch();
-        //}
-        
+        if (true/*Input.GetKey(KeyCode.Space)*/)
+        {
+            if (_iscatch)
+            {
+                if (stamina >= 0.001)
+                    Catch();
+                else
+                    UnCatch();
+            }
+            else
+            {
+                if (stamina >= 0.2)
+                    Catch();
+                else
+                    UnCatch();
+            }
+        }
+        else
+        {
+            UnCatch();
+        }
+
 
         if (Input.GetKey("w"))
         {
@@ -152,16 +169,34 @@ public class PlayerManager : MonoBehaviour
     {
         CheckLowVelocity();
 
-        //if (_iscatch)
-        //{
-        //    LeftHand.Catch();
-        //    RightHand.Catch();
-        //}
-        //else
-        //{
-        //    LeftHand.UnCatch();
-        //    RightHand.UnCatch();
-        //}
+        if (_iscatch)
+        {
+            LeftHand.Catch();
+            RightHand.Catch();
+        }
+        else
+        {
+            LeftHand.UnCatch();
+            RightHand.UnCatch();
+        }
+        if (LeftHand.catched||RightHand.catched)
+        {
+            if(LeftHand.catched && RightHand.catched)
+            { 
+                stamina -=  Time.fixedTime /hover_time;
+            
+            }
+            else
+            {
+                stamina -= 2*Time.fixedTime / hover_time;
+            }
+            if (stamina < 0) stamina = 0f;
+        }
+        else
+        {
+            stamina += Time.fixedTime / recovery_time;
+            if (stamina > 1) stamina = 1f;
+        }
     }
 
     // устанавливаем состояние персонажа
@@ -292,14 +327,14 @@ public class PlayerManager : MonoBehaviour
         
     }
 
-    //public void Catch()
-    //{
-    //    _iscatch = true;
-    //}
-    //public void UnCatch()
-    //{
-    //    _iscatch = false;
-    //}
+    public void Catch()
+    {
+        _iscatch = true;
+    }
+    public void UnCatch()
+    {
+        _iscatch = false;
+    }
 
 
 

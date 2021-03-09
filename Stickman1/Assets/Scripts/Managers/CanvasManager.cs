@@ -9,6 +9,9 @@ public class CanvasManager : MonoBehaviour
     public Text CurrentCounter;
     public Text TheBestCounter;
 
+    public Image StaminaBar;
+    public PlayerManager Player;
+
     public GameObject _RestartMenu;
     public GameObject _PauseMenu;
 
@@ -36,7 +39,10 @@ public class CanvasManager : MonoBehaviour
     {
         _PauseMenu.SetActive(active);
     }
-
+    private void Update()
+    {
+        StaminaBar.fillAmount = Player.stamina;
+    }
 
 
 
